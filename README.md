@@ -13,7 +13,6 @@ isomorphic package for WebRTC
 ## dependencies for gopherjs
 
 - go get -u github.com/gopherjs/gopherjs
-- go get -u honnef.co/go/js/util
 
 ## install
 

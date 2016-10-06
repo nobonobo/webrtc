@@ -9,6 +9,10 @@ import (
 	org "github.com/keroserene/go-webrtc"
 )
 
+func init() {
+	org.SetLoggingVerbosity(0)
+}
+
 func find(s []string, search string) int {
 	for i := 0; i < len(s); i++ {
 		if strings.ToLower(s[i]) == strings.ToLower(search) {

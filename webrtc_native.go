@@ -3,7 +3,9 @@
 package webrtc
 
 import (
+	"fmt"
 	"log"
+	"strconv"
 	"strings"
 
 	org "github.com/keroserene/go-webrtc"
@@ -13,9 +15,11 @@ func init() {
 	org.SetLoggingVerbosity(0)
 }
 
-func find(s []string, search string) int {
-	for i := 0; i < len(s); i++ {
-		if strings.ToLower(s[i]) == strings.ToLower(search) {
+func find(f func(int) fmt.Stringer, search string) int {
+	m := ""
+	for i := 0; m != strconv.Itoa(i); i++ {
+		m = f(i).String()
+		if strings.ToLower(m) == strings.ToLower(search) {
 			return i
 		}
 	}
@@ -42,9 +46,12 @@ func NewPeerConnection(config *Configuration) (*PeerConnection, error) {
 			return nil, err
 		}
 	}
-	conf.BundlePolicy = org.BundlePolicy(find(org.BundlePolicyString, config.BundlePolicy))
+	conf.BundlePolicy = org.BundlePolicy(find(
+		func(i int) fmt.Stringer { return org.BundlePolicy(i) }, config.BundlePolicy,
+	))
 	conf.IceTransportPolicy = org.IceTransportPolicy(find(
-		org.IceTransportPolicyString, config.IceTransportPolicy))
+		func(i int) fmt.Stringer { return org.IceTransportPolicy(i) }, config.IceTransportPolicy,
+	))
 	conf.PeerIdentity = config.PeerIdentity
 	pc, err := org.NewPeerConnection(conf)
 	if err != nil {
@@ -78,28 +85,28 @@ func (pc *PeerConnection) OnIceCandidateError(cb func()) {
 // OnSignalingStateChange ...
 func (pc *PeerConnection) OnSignalingStateChange(cb func(SignalingState string)) {
 	pc.pc.OnSignalingStateChange = func(s org.SignalingState) {
-		cb(org.SignalingStateString[s])
+		cb(s.String())
 	}
 }
 
 // OnIceConnectionStateChange ...
 func (pc *PeerConnection) OnIceConnectionStateChange(cb func(IceConnectionState string)) {
 	pc.pc.OnIceConnectionStateChange = func(s org.IceConnectionState) {
-		cb(org.IceConnectionStateString[s])
+		cb(s.String())
 	}
 }
 
 // OnIceGatheringStateChange ...
 func (pc *PeerConnection) OnIceGatheringStateChange(cb func(IceGatheringState string)) {
 	pc.pc.OnIceGatheringStateChange = func(s org.IceGatheringState) {
-		cb(org.IceGatheringStateString[s])
+		cb(s.String())
 	}
 }
 
 // OnConnectionStateChange ...
 func (pc *PeerConnection) OnConnectionStateChange(cb func(PeerConnectionState string)) {
 	pc.pc.OnConnectionStateChange = func(s org.PeerConnectionState) {
-		cb(org.PeerConnectionStateString[s])
+		cb(s.String())
 	}
 }
 
@@ -137,7 +144,7 @@ func (pc *PeerConnection) Close() error {
 
 // ConnectionState ...
 func (pc *PeerConnection) ConnectionState() string {
-	return org.PeerConnectionStateString[pc.pc.ConnectionState()]
+	return pc.pc.ConnectionState().String()
 }
 
 // CreateAnswer ...
@@ -214,7 +221,7 @@ func (pc *PeerConnection) SetRemoteDescription(sdp *SessionDescription) error {
 
 // SignalingState ...
 func (pc *PeerConnection) SignalingState() string {
-	return org.SignalingStateString[pc.pc.SignalingState()]
+	return pc.pc.SignalingState().String()
 }
 
 // DataChannel ...

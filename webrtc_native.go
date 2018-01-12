@@ -161,7 +161,7 @@ func (pc *PeerConnection) CreateAnswer() (*SessionDescription, error) {
 
 // CreateDataChannel ...
 func (pc *PeerConnection) CreateDataChannel(label string) (*DataChannel, error) {
-	dc, err := pc.pc.CreateDataChannel(label, org.Init{})
+	dc, err := pc.pc.CreateDataChannel(label)
 	if err != nil {
 		return nil, err
 	}

@@ -374,17 +374,17 @@ func GetUserMedia(constraints *Constraints) (stream *MediaStream, err error) {
 	}()
 	wg := sync.WaitGroup{}
 	wg.Add(1)
-	navigator.Call("getUserMedia",
-		constraints,
-		func(ev *js.Object) {
+	go func() {
+		mediaDevices := navigator.Get("mediaDevices")
+		p := mediaDevices.Call("getUserMedia", constraints)
+		p.Call("then", func(ev *js.Object) {
 			stream = &MediaStream{o: ev}
 			wg.Done()
-		},
-		func(e *js.Object) {
+		}).Call("catch", func(e *js.Object) {
 			err = fmt.Errorf("get user media failed: %s", e)
 			wg.Done()
-		},
-	)
+		})
+	}()
 	wg.Wait()
 	return
 }

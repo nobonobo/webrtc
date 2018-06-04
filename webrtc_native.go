@@ -120,13 +120,19 @@ func (pc *PeerConnection) OnDataChannel(cb func(*DataChannel)) {
 }
 
 // OnAddStream ...
-func (pc *PeerConnection) OnAddStream(cb func(*MediaStream)) {}
+func (pc *PeerConnection) OnAddStream(cb func(*MediaStream)) {
+	panic("not supported")
+}
 
 // OnRemoveStream ...
-func (pc *PeerConnection) OnRemoveStream(cb func(*MediaStream)) {}
+func (pc *PeerConnection) OnRemoveStream(cb func(*MediaStream)) {
+	panic("not supported")
+}
 
 // AddStream ...
-func (pc *PeerConnection) AddStream(stream *MediaStream) (err error) { return nil }
+func (pc *PeerConnection) AddStream(stream *MediaStream) (err error) {
+	panic("not supported")
+}
 
 // AddIceCandidate ...
 func (pc *PeerConnection) AddIceCandidate(ic *IceCandidate) error {
